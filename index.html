@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aldebaran Labs — Tecnología que se ve desde lejos</title>
+<meta name="description" content="Laboratorio de software, inteligencia artificial y creatividad digital en Caracas.">
+<meta property="og:title" content="Aldebaran Labs — Tecnología que se ve desde lejos">
+<meta property="og:description" content="Software, inteligencia artificial y creatividad digital. Desde Caracas.">
+<meta name="theme-color" content="#0A1022">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230A1022'/><path d='M50 18 L22 80 M50 18 L78 80' stroke='%234CC3F5' stroke-width='7' stroke-linecap='round'/><path d='M33 57 H67' stroke='%23F5A524' stroke-width='7' stroke-linecap='round'/><circle cx='50' cy='57' r='7' fill='%23F5A524'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A1022;
+    --bg-2: #0E1630;
+    --surface: #121C3A;
+    --line: #243357;
+    --text: #F2F6FC;
+    --muted: #B4C0D8;
+    --cyan: #4CC3F5;
+    --amber: #F5A524;
+    --wa: #25B97A;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-behavior: smooth; scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 1.125rem; line-height: 1.65; }
+  h1, h2, h3 { font-family: "Sora", "Atkinson Hyperlegible", system-ui, sans-serif; margin: 0; line-height: 1.15; }
+  h1 { font-size: clamp(2.2rem, 7.5vw, 3.9rem); font-weight: 800; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.7rem, 5vw, 2.4rem); font-weight: 700; letter-spacing: -0.01em; }
+  h3 { font-size: 1.25rem; font-weight: 700; }
+  p { margin: 0; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding-inline: 1.25rem; }
+  section { padding-block: 4.5rem; border-top: 1px solid var(--line); }
+  .kicker { font-family: "Sora", sans-serif; font-weight: 700; font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); margin-bottom: .75rem; }
+  .lead { color: var(--muted); max-width: 60ch; margin-top: 1rem; }
+
+  /* Navegación */
+  .nav { display: flex; justify-content: space-between; align-items: center; padding-block: 1.1rem; }
+  .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; font-family: "Sora", sans-serif; font-weight: 800; letter-spacing: .12em; font-size: .95rem; }
+  .brand svg { width: 34px; height: 34px; }
+  .brand small { color: var(--cyan); font-weight: 600; letter-spacing: .3em; }
+  .nav-cta { text-decoration: none; font-weight: 700; color: var(--bg); background: var(--amber); padding: .6rem 1rem; border-radius: 999px; font-size: 1rem; }
+
+  /* Hero */
+  .hero { position: relative; overflow: hidden; }
+  .sky { position: absolute; inset: 0; pointer-events: none; }
+  .sky i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: .35; }
+  .hero-grid { position: relative; display: grid; gap: 2rem; align-items: center; padding-block: 2rem 4.5rem; }
+  @media (min-width: 880px) { .hero-grid { grid-template-columns: 1.15fr .85fr; padding-block: 4rem 6rem; } }
+  .hero p.sub { font-size: 1.25rem; color: var(--muted); margin-top: 1.25rem; max-width: 44ch; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; font: inherit; font-weight: 700; text-decoration: none; border-radius: 14px; padding: .95rem 1.35rem; min-height: 52px; }
+  .btn.primary { background: var(--amber); color: var(--bg); }
+  .btn.line { border: 2px solid var(--line); color: var(--text); }
+  .emblem { justify-self: center; width: min(360px, 78vw); }
+  @media (max-width: 879px) { .emblem { order: -1; width: min(220px, 60vw); } }
+  .signal .mean { font-style: normal; }
+  .emblem svg { width: 100%; height: auto; display: block; }
+  .draw { stroke-dasharray: 400; stroke-dashoffset: 400; animation: draw 1.6s ease-out forwards; }
+  .draw.d2 { animation-delay: .25s; }
+  .draw.d3 { animation-delay: 1.1s; stroke-dasharray: 160; stroke-dashoffset: 160; animation-duration: .8s; }
+  .pop { opacity: 0; animation: pop .6s ease-out forwards; }
+  .pop.p1 { animation-delay: 1.5s; } .pop.p2 { animation-delay: 1.8s; } .pop.p3 { animation-delay: 2s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes pop { to { opacity: 1; } }
+
+  .fact { margin-top: 2.25rem; border-left: 3px solid var(--amber); padding-left: 1rem; color: var(--muted); max-width: 52ch; }
+  .fact strong { color: var(--text); }
+
+  /* Capacidades */
+  .caps { display: grid; gap: 1rem; margin-top: 2.5rem; }
+  @media (min-width: 760px) { .caps { grid-template-columns: 1fr 1fr; } }
+  .cap { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 1.6rem; }
+  .cap .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--bg-2); border: 1px solid var(--line); margin-bottom: 1rem; }
+  .cap .ico svg { width: 22px; height: 22px; }
+  .cap p { color: var(--muted); margin-top: .5rem; }
+
+  /* Casos */
+  .cases { display: grid; gap: 1rem; margin-top: 2.5rem; }
+  @media (min-width: 760px) { .cases { grid-template-columns: repeat(2, 1fr); } }
+  .case { border: 1px solid var(--line); border-radius: 20px; padding: 1.6rem; display: grid; gap: .6rem; align-content: start; background: linear-gradient(180deg, var(--bg-2), var(--bg)); }
+  .case .fmt { justify-self: start; font-size: .85rem; font-weight: 700; color: var(--cyan); border: 1px solid var(--line); border-radius: 999px; padding: .2rem .7rem; }
+  .case p { color: var(--muted); }
+  .case ul { margin: .2rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+
+  /* Señales / planes */
+  .signals { display: grid; gap: 1rem; margin-top: 2.5rem; }
+  @media (min-width: 880px) { .signals { grid-template-columns: repeat(3, 1fr); } }
+  .signal { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 1.75rem 1.6rem; display: grid; gap: .7rem; align-content: start; }
+  .signal .num { font-family: "Sora", sans-serif; font-weight: 800; font-size: 3.4rem; line-height: 1; letter-spacing: .02em; }
+  .signal.s444 .num { color: var(--cyan); }
+  .signal.s777 .num { color: var(--amber); }
+  .signal.s999 .num { background: linear-gradient(90deg, var(--cyan), var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .signal .mean { font-size: .98rem; color: var(--muted); }
+  .signal ul { margin: .2rem 0; padding-left: 1.1rem; }
+  .signal li { margin-bottom: .3rem; }
+  .signal .price { color: var(--muted); font-size: .95rem; }
+  .signal a { justify-self: start; color: var(--amber); font-weight: 700; text-decoration: none; }
+  .giant { margin-top: 1rem; border: 1px dashed var(--line); border-radius: 22px; padding: 1.6rem; display: grid; gap: .5rem; }
+  @media (min-width: 760px) { .giant { grid-template-columns: 1fr auto; align-items: center; } }
+  .giant p { color: var(--muted); }
+  .note { color: var(--muted); font-size: .95rem; margin-top: 1.25rem; }
+
+  /* Tripulación */
+  .crew { display: grid; gap: 1rem; margin-top: 2.5rem; grid-template-columns: 1fr 1fr; }
+  @media (min-width: 880px) { .crew { grid-template-columns: repeat(4, 1fr); } }
+  .agent { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 1.3rem; text-align: left; }
+  .agent .helmet { width: 76px; height: 76px; display: block; margin-bottom: .8rem; }
+  .agent .av { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-family: "Sora", sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--bg); margin-bottom: .8rem; }
+  .agent .role { color: var(--cyan); font-size: .9rem; font-weight: 700; }
+  .agent p { color: var(--muted); font-size: .98rem; margin-top: .35rem; }
+
+  /* Pasos */
+  .steps { list-style: none; margin: 2.5rem 0 0; padding: 0; display: grid; gap: 1.25rem; counter-reset: s; }
+  @media (min-width: 880px) { .steps { grid-template-columns: repeat(4, 1fr); } }
+  .steps li { counter-increment: s; border-top: 2px solid var(--line); padding-top: 1rem; }
+  .steps li::before { content: "0" counter(s); font-family: "Sora", sans-serif; font-weight: 800; color: var(--amber); display: block; margin-bottom: .4rem; }
+  .steps p { color: var(--muted); margin-top: .35rem; }
+
+  /* Observatorio */
+  .obs { display: grid; gap: 1rem; margin-top: 2.5rem; }
+  @media (min-width: 880px) { .obs { grid-template-columns: repeat(3, 1fr); } }
+  .obs-item { border-left: 3px solid var(--cyan); padding: .3rem 0 .3rem 1rem; }
+  .obs-item .big { font-family: "Sora", sans-serif; font-weight: 800; font-size: 2rem; color: var(--text); }
+  .obs-item p { color: var(--muted); }
+
+  .final { text-align: center; }
+  .final .lead { margin-inline: auto; }
+  .final .btn { margin-top: 2rem; }
+  footer { border-top: 1px solid var(--line); padding-block: 2rem 6.5rem; color: var(--muted); font-size: .95rem; }
+  footer a { color: var(--cyan); }
+
+  .fab { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: 58px; height: 58px; border-radius: 50%; background: var(--wa); display: grid; place-items: center; box-shadow: 0 10px 25px -8px rgba(0,0,0,.6); z-index: 10; }
+  .fab svg { width: 28px; height: 28px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .draw, .pop { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3 1 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.2-.2Z"/></symbol>
+    <symbol id="mark" viewBox="0 0 200 200">
+      <path d="M100 42 L48 158 M100 42 L152 158" stroke="#4CC3F5" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <path d="M68 114 H132" stroke="#F5A524" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="100" cy="114" r="9" fill="#F5A524"/><circle cx="100" cy="114" r="4" fill="#fff"/>
+      <circle cx="100" cy="42" r="7" fill="#4CC3F5"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="hero">
+  <div class="sky" id="sky" aria-hidden="true"></div>
+  <div class="wrap nav">
+    <a class="brand" href="#"><svg><use href="#mark"/></svg><span>ALDEBARAN <small>LABS</small></span></a>
+    <a class="nav-cta" data-wa="Hola, quiero hablar con Aldebaran Labs." href="#">Hablemos</a>
+  </div>
+
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">Laboratorio de tecnología · Caracas</div>
+      <h1>Construimos tecnología que se ve desde lejos</h1>
+      <p class="sub">Software, inteligencia artificial y creatividad digital para negocios que piensan en grande.</p>
+      <div class="ctas">
+        <a class="btn primary" data-wa="Hola, tengo una misión para Aldebaran Labs." href="#">Cuéntanos tu misión</a>
+        <a class="btn line" href="#senales">Ver las señales</a>
+      </div>
+      <p class="fact"><strong>Aldebarán</strong> es 44 veces más grande que el Sol y su luz tarda 65 años en llegar a la Tierra. <strong>Nosotros tardamos 48 horas</strong> en poner tu negocio en línea.</p>
+    </div>
+
+    <div class="emblem" aria-label="Emblema de Aldebaran Labs: la letra A trazada como constelación">
+      <svg viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="57%" r="40%">
+            <stop offset="0%" stop-color="#F5A524" stop-opacity=".45"/>
+            <stop offset="100%" stop-color="#F5A524" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="96" fill="none" stroke="#243357" stroke-width="1"/>
+        <circle cx="100" cy="100" r="88" fill="none" stroke="#243357" stroke-width=".6"/>
+        <circle cx="100" cy="112" r="60" fill="url(#glow)" class="pop p1"/>
+        <path class="draw" d="M100 38 L46 150" stroke="#4CC3F5" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <path class="draw d2" d="M100 38 L154 150" stroke="#4CC3F5" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <path class="draw d3" d="M66 112 H134" stroke="#F5A524" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <g class="pop p2">
+          <circle cx="46" cy="150" r="4.5" fill="#0A1022" stroke="#4CC3F5" stroke-width="2"/>
+          <circle cx="154" cy="150" r="4.5" fill="#0A1022" stroke="#4CC3F5" stroke-width="2"/>
+          <path d="M100 26 V50 M88 38 H112" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="100" cy="38" r="4" fill="#4CC3F5"/>
+        </g>
+        <g class="pop p3">
+          <circle cx="100" cy="112" r="8" fill="#F5A524"/>
+          <circle cx="100" cy="112" r="3.5" fill="#fff"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="capacidades">
+    <div class="wrap">
+      <div class="kicker">Lo que construimos</div>
+      <h2>Cuatro formas de hacer brillar un negocio</h2>
+      <div class="caps">
+        <div class="cap">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#4CC3F5" stroke-width="2" stroke-linecap="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg></div>
+          <h3>Software a la medida</h3>
+          <p>Plataformas web, apps y sistemas internos diseñados para la forma en que trabaja tu negocio.</p>
+        </div>
+        <div class="cap">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#F5A524" stroke-width="2" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Inteligencia artificial y automatización</h3>
+          <p>Asistentes que responden a tus clientes, procesos que se hacen solos y datos que te dicen qué hacer.</p>
+        </div>
+        <div class="cap">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#4CC3F5" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+          <h3>Presencia digital y tiendas</h3>
+          <p>Que te encuentren en Google, que vean tus productos y que te compren sin salir del teléfono.</p>
+        </div>
+        <div class="cap">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#F5A524" stroke-width="2" stroke-linecap="round"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg></div>
+          <h3>Identidad y contenido creativo</h3>
+          <p>Marcas, visuales y piezas para redes con una estética que hace que la gente se detenga.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="casos">
+    <div class="wrap">
+      <div class="kicker">Bitácora del laboratorio</div>
+      <h2>Misiones del laboratorio</h2>
+      <p class="lead">Por confidencialidad, describimos cada proyecto por lo que hace, no por quién lo encargó.</p>
+      <div class="cases">
+        <div class="case">
+          <span class="fmt">Plataforma web en tiempo real</span>
+          <h3>Pedidos para una feria de comida</h3>
+          <p>Menú digital para varios restaurantes, pedidos que llegan al instante a la cocina y beneficios automáticos para trabajadores de un centro comercial.</p>
+        </div>
+        <div class="case">
+          <span class="fmt">App móvil + terminal de pago</span>
+          <h3>Propinas sin efectivo</h3>
+          <p>El cliente deja la propina con tarjeta en un terminal Bluetooth y el sistema reparte automáticamente entre el equipo por turno, con auditoría de seguridad externa.</p>
+        </div>
+        <div class="case">
+          <span class="fmt">App + pantallas de mostrador</span>
+          <h3>Lealtad para muchas tiendas</h3>
+          <p>Un programa de puntos compartido entre comercios, con códigos QR que cambian cada 60 segundos para que nadie pueda copiarlos.</p>
+        </div>
+        <div class="case">
+          <span class="fmt">Experiencia interactiva</span>
+          <h3>Presentación para inversionistas</h3>
+          <p>Una propuesta que el inversionista arma él mismo: elige porcentajes, ve proyecciones por escenario y envía su selección en un toque.</p>
+        </div>
+        <div class="case">
+          <span class="fmt">E-commerce internacional</span>
+          <h3>Tienda online para una marca en Estados Unidos</h3>
+          <p>Diseño, catálogo y pagos en línea para vender fuera de Venezuela.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="senales">
+    <div class="wrap">
+      <div class="kicker">Tres señales</div>
+      <h2>¿Cuál número te ha estado apareciendo?</h2>
+      <p class="lead">Cada señal es un punto de partida. Toda misión se ajusta a tu proyecto.</p>
+      <div class="signals">
+        <div class="signal s444">
+          <div class="num">444</div>
+          <h3>Ojo del Toro</h3>
+          <p class="mean">Aldebarán es el ojo de la constelación de Tauro: la estrella que todos ven primero.</p>
+          <ul>
+            <li>Perfil de Google Maps optimizado</li>
+            <li>Catálogo de WhatsApp con tus productos</li>
+            <li>Página web con botón de pedido</li>
+          </ul>
+          <span class="price">Desde $444</span>
+          <a data-wa="Hola, me interesa la señal 444: Ojo del Toro." href="#">Elegir 444</a>
+        </div>
+        <div class="signal s777">
+          <div class="num">777</div>
+          <h3>Pléyades</h3>
+          <p class="mean">Las siete hermanas de Tauro: un grupo que brilla junto.</p>
+          <ul>
+            <li>Identidad visual de tu marca</li>
+            <li>Plantillas y primeras piezas para redes</li>
+            <li>Tienda online con tu catálogo</li>
+          </ul>
+          <span class="price">Desde $777</span>
+          <a data-wa="Hola, me interesa la señal 777: Pléyades." href="#">Elegir 777</a>
+        </div>
+        <div class="signal s999">
+          <div class="num">999</div>
+          <h3>Híades</h3>
+          <p class="mean">El cúmulo de estrellas más cercano a la Tierra: muchas trabajando en el mismo rumbo.</p>
+          <ul>
+            <li>Agentes de IA que atienden a tus clientes</li>
+            <li>Pedidos y seguimiento automáticos</li>
+            <li>Reportes que llegan solos a tu teléfono</li>
+          </ul>
+          <span class="price">Desde $999</span>
+          <a data-wa="Hola, me interesa la señal 999: Híades." href="#">Elegir 999</a>
+        </div>
+      </div>
+      <div class="giant">
+        <div>
+          <h3>Gigante Roja</h3>
+          <p>Sistemas completos, plataformas y software a la medida. Para misiones que no caben en una señal.</p>
+        </div>
+        <a class="btn line" data-wa="Hola, tengo un proyecto grande: Gigante Roja." href="#">Planear una misión</a>
+      </div>
+      <p class="note">Los precios son una referencia y se ajustan a cada proyecto.</p>
+    </div>
+  </section>
+
+  <section id="tripulacion">
+    <div class="wrap">
+      <div class="kicker">Mi tripulación</div>
+      <h2>Cuatro puestos en cada misión</h2>
+      <p class="lead">Cada proyecto pasa por los cuatro puestos de la nave antes de despegar.</p>
+      <div class="crew">
+        <div class="agent">
+          <svg class="helmet" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="58" fill="#0E1630" stroke="#4CC3F5" stroke-opacity=".35"/>
+            <path d="M24 104c4-16 19-26 36-26s32 10 36 26" fill="#1A2550" stroke="#4CC3F5" stroke-width="2"/>
+            <circle cx="60" cy="50" r="30" fill="#1A2550" stroke="#4CC3F5" stroke-width="3"/>
+            <path d="M38 50a22 18 0 0 1 44 0v4a22 16 0 0 1-44 0z" fill="#070C1C"/>
+            <path d="M46 44l6-4" stroke="#fff" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="72" cy="48" r="2" fill="#4CC3F5"/>
+            <g transform="translate(84 80)"><circle r="15" fill="#4CC3F5"/><path d="M-6 0l4 4 8-8" stroke="#0A1022" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          </svg>
+          <h3>Marvin</h3><div class="role">Lógica</div><p>Revisa que cada solución tenga sentido y cumpla las reglas.</p>
+        </div>
+        <div class="agent">
+          <svg class="helmet" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="58" fill="#0E1630" stroke="#F5A524" stroke-opacity=".35"/>
+            <path d="M24 104c4-16 19-26 36-26s32 10 36 26" fill="#1A2550" stroke="#F5A524" stroke-width="2"/>
+            <circle cx="60" cy="50" r="30" fill="#1A2550" stroke="#F5A524" stroke-width="3"/>
+            <path d="M38 50a22 18 0 0 1 44 0v4a22 16 0 0 1-44 0z" fill="#070C1C"/>
+            <path d="M46 44l6-4" stroke="#fff" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="72" cy="48" r="2" fill="#F5A524"/>
+            <g transform="translate(84 80)"><circle r="15" fill="#F5A524"/><path d="M-7 5l5-5 3 3 6-7M3-4h4v4" stroke="#0A1022" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          </svg>
+          <h3>Nick</h3><div class="role">Negocio</div><p>Piensa como tu cliente y cuida que no quede ningún cabo suelto.</p>
+        </div>
+        <div class="agent">
+          <svg class="helmet" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="58" fill="#0E1630" stroke="#9DB8FF" stroke-opacity=".35"/>
+            <path d="M24 104c4-16 19-26 36-26s32 10 36 26" fill="#1A2550" stroke="#9DB8FF" stroke-width="2"/>
+            <circle cx="60" cy="50" r="30" fill="#1A2550" stroke="#9DB8FF" stroke-width="3"/>
+            <path d="M38 50a22 18 0 0 1 44 0v4a22 16 0 0 1-44 0z" fill="#070C1C"/>
+            <path d="M46 44l6-4" stroke="#fff" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="72" cy="48" r="2" fill="#9DB8FF"/>
+            <g transform="translate(84 80)"><circle r="15" fill="#9DB8FF"/><path d="M0-8l6 12H-6z" stroke="#0A1022" stroke-width="2.4" fill="none" stroke-linejoin="round"/><circle r="2" cy="1" fill="#0A1022"/></g>
+          </svg>
+          <h3>Mary</h3><div class="role">Diseño</div><p>Da forma a cada pantalla para que sea clara y bonita.</p>
+        </div>
+        <div class="agent">
+          <svg class="helmet" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="58" fill="#0E1630" stroke="#7BE0B8" stroke-opacity=".35"/>
+            <path d="M24 104c4-16 19-26 36-26s32 10 36 26" fill="#1A2550" stroke="#7BE0B8" stroke-width="2"/>
+            <circle cx="60" cy="50" r="30" fill="#1A2550" stroke="#7BE0B8" stroke-width="3"/>
+            <path d="M38 50a22 18 0 0 1 44 0v4a22 16 0 0 1-44 0z" fill="#070C1C"/>
+            <path d="M46 44l6-4" stroke="#fff" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="72" cy="48" r="2" fill="#7BE0B8"/>
+            <g transform="translate(84 80)"><circle r="15" fill="#7BE0B8"/><path d="M-4-5l-5 5 5 5M4-5l5 5-5 5" stroke="#0A1022" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          </svg>
+          <h3>Felix</h3><div class="role">Ingeniería</div><p>El motor técnico. Habla poco y construye mucho.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="despegue">
+    <div class="wrap">
+      <div class="kicker">Cómo despegamos</div>
+      <h2>De la idea a la órbita en cuatro pasos</h2>
+      <ol class="steps">
+        <li><h3>Señal</h3><p>Nos escribes y nos cuentas qué quieres lograr.</p></li>
+        <li><h3>Trayectoria</h3><p>Te mostramos una propuesta y un ejemplo visual.</p></li>
+        <li><h3>Lanzamiento</h3><p>Construimos y te vamos mostrando avances.</p></li>
+        <li><h3>Órbita</h3><p>Tu proyecto queda funcionando y te enseñamos a usarlo.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="observatorio">
+    <div class="wrap">
+      <div class="kicker">Desde el observatorio</div>
+      <h2>Datos de nuestra estrella</h2>
+      <div class="obs">
+        <div class="obs-item"><div class="big">65 años luz</div><p>La luz de Aldebarán que ves esta noche salió de la estrella hace unos 65 años.</p></div>
+        <div class="obs-item"><div class="big">El ojo del Toro</div><p>Es la estrella más brillante de la constelación de Tauro y una de las más brillantes del cielo nocturno.</p></div>
+        <div class="obs-item"><div class="big">2 millones de años</div><p>La sonda Pioneer 10 viaja en dirección a Aldebarán. Llegaría a sus cercanías en unos dos millones de años.</p></div>
+      </div>
+      <p class="note">Más datos del cosmos y la tecnología en <a id="ig" href="#" style="color:var(--cyan)">Instagram</a>.</p>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>¿Cuál es tu misión?</h2>
+      <p class="lead">Cuéntanos qué quieres construir y te respondemos con una trayectoria.</p>
+      <a class="btn primary" data-wa="Hola, quiero contarles mi misión." href="#"><svg width="20" height="20"><use href="#wa"/></svg> Escribir por WhatsApp</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Aldebaran Labs · Caracas, Venezuela · <a id="ig2" href="#">@aldebaran.labs</a></div>
+</footer>
+
+<a class="fab" data-wa="Hola, quiero hablar con Aldebaran Labs." href="#" aria-label="Escribir por WhatsApp" style="color:#fff"><svg><use href="#wa"/></svg></a>
+
+<script>
+/* ============ CONFIGURACIÓN ============ */
+const WHATSAPP = "584143776317";   // Número con código de país, sin + ni espacios
+const INSTAGRAM = "aldebaran.labs"; // Usuario sin @
+/* ======================================= */
+
+document.querySelectorAll("[data-wa]").forEach(a => {
+  a.href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(a.dataset.wa);
+  a.target = "_blank"; a.rel = "noopener";
+});
+["ig", "ig2"].forEach(id => {
+  const a = document.getElementById(id);
+  a.href = "https://instagram.com/" + INSTAGRAM; a.target = "_blank"; a.rel = "noopener";
+});
+
+// Cielo discreto: pocas estrellas, fijas, para no distraer la lectura
+const sky = document.getElementById("sky");
+let seed = 7;
+const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+for (let i = 0; i < 45; i++) {
+  const s = document.createElement("i");
+  s.style.left = (rnd() * 100) + "%";
+  s.style.top = (rnd() * 100) + "%";
+  s.style.opacity = (0.15 + rnd() * 0.35).toFixed(2);
+  if (rnd() > 0.85) { s.style.width = s.style.height = "3px"; }
+  sky.appendChild(s);
+}
+</script>
+</body>
+</html>
