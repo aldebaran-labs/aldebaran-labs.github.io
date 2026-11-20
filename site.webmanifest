@@ -1,0 +1,12 @@
+{
+  "name": "Aldebaran — Inversiones Sistema Aldebaran, C.A.",
+  "short_name": "Aldebaran",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "icons": [
+    { "src": "/assets/img/logo.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/img/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
