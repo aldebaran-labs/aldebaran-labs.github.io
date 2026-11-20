@@ -1,7 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Aldebaran">
-  <rect width="32" height="32" rx="8" fill="#111827"/>
-  <path d="M16 7.5 9 24.5M16 7.5l7 17" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" fill="none"/>
-  <path d="M11.9 18.5h8.2" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round"/>
-  <circle cx="16" cy="18.5" r="2.4" fill="#FFFFFF"/>
-  <circle cx="16" cy="18.5" r="1.1" fill="#111827"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Aldebaran Labs">
+  <path d="M100 42 L48 158 M100 42 L152 158" stroke="#4CC3F5" stroke-width="9" stroke-linecap="round" fill="none"/>
+  <path d="M68 114 H132" stroke="#F5A524" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="100" cy="114" r="9" fill="#F5A524"/><circle cx="100" cy="114" r="4" fill="#fff"/>
+  <circle cx="100" cy="42" r="7" fill="#4CC3F5"/>
 </svg>

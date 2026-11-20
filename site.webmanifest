@@ -1,10 +1,10 @@
 {
-  "name": "Aldebaran — Inversiones Sistema Aldebaran, C.A.",
-  "short_name": "Aldebaran",
+  "name": "Aldebaran Labs — Inversiones Sistema Aldebaran, C.A.",
+  "short_name": "Aldebaran Labs",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#FFFFFF",
-  "theme_color": "#FFFFFF",
+  "background_color": "#0A1022",
+  "theme_color": "#0A1022",
   "icons": [
     { "src": "/assets/img/logo.png", "sizes": "512x512", "type": "image/png" },
     { "src": "/assets/img/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }

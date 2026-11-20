@@ -1,21 +1,24 @@
-/* Aldebaran Labs — comportamiento del sitio (idioma, menú, copiar, formulario). */
+/* Aldebaran Labs — comportamiento del sitio: idioma, menú, cielo, animaciones, copiar y formulario. */
 (function () {
   "use strict";
 
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* ---------- Textos comunes en inglés (header + footer) ---------- */
   var COMMON_EN = {
-    "nav.ecosystem": "Ecosystem",
+    "nav.projects": "Missions",
     "nav.capabilities": "Capabilities",
     "nav.company": "Company",
     "nav.contact": "Contact",
-    "nav.cta": "Contact us",
+    "nav.cta": "Let’s talk",
     "brand.legal": "Inversiones Sistema Aldebaran, C.A.",
     "footer.about": "Inversiones Sistema Aldebaran, C.A. (Aldebaran Labs). Software engineering and digital platforms in Caracas, Venezuela.",
-    "footer.ecosystem": "Ecosystem",
     "footer.company": "Company",
+    "footer.projects": "Missions",
     "footer.capabilities": "Capabilities",
     "footer.about.link": "About us",
     "footer.contact": "Contact",
+    "footer.reach": "Contact",
     "footer.legal": "Legal & compliance",
     "footer.privacy": "Privacy Policy",
     "footer.terms": "Terms of Service",
@@ -48,23 +51,11 @@
 
   function applyLang(lang) {
     document.documentElement.lang = lang;
-
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       if (!originals.has(el)) originals.set(el, el.innerHTML);
       var key = el.getAttribute("data-i18n");
       el.innerHTML = lang === "en" && EN[key] ? EN[key] : originals.get(el);
     });
-
-    document.querySelectorAll("[data-i18n-attr]").forEach(function (el) {
-      el.getAttribute("data-i18n-attr").split(";").forEach(function (pair) {
-        var parts = pair.split(":");
-        var attr = parts[0], key = parts[1];
-        var store = "data-orig-" + attr;
-        if (!el.hasAttribute(store)) el.setAttribute(store, el.getAttribute(attr) || "");
-        el.setAttribute(attr, lang === "en" && EN[key] ? EN[key] : el.getAttribute(store));
-      });
-    });
-
     var meta = document.querySelector('meta[name="description"]');
     if (meta) {
       if (!meta.hasAttribute("data-orig")) meta.setAttribute("data-orig", meta.content);
@@ -72,7 +63,6 @@
     }
     if (!document.documentElement.hasAttribute("data-title")) document.documentElement.setAttribute("data-title", document.title);
     document.title = lang === "en" && EN["meta.title"] ? EN["meta.title"] : document.documentElement.getAttribute("data-title");
-
     document.querySelectorAll(".lang button").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang));
     });
@@ -85,7 +75,6 @@
       applyLang(lang);
     });
   });
-
   var initial = readStoredLang();
   if (initial !== "es") applyLang(initial);
 
@@ -100,6 +89,95 @@
     toggle.addEventListener("click", function () { setOpen(!mobile.classList.contains("open")); });
     mobile.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { setOpen(false); }); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") setOpen(false); });
+  }
+
+  /* ---------- Header con borde al bajar ---------- */
+  var header = document.querySelector(".site-header");
+  if (header) {
+    var onScroll = function () { header.classList.toggle("scrolled", window.scrollY > 8); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* ---------- Cielo estrellado (posiciones fijas, como el diseño original) ---------- */
+  document.querySelectorAll(".sky").forEach(function (sky, n) {
+    var seed = 7 + n * 13;
+    var rnd = function () { return (seed = (seed * 9301 + 49297) % 233280) / 233280; };
+    var count = sky.parentElement.classList.contains("hero") ? 70 : 34;
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < count; i++) {
+      var s = document.createElement("i");
+      s.style.left = (rnd() * 100) + "%";
+      s.style.top = (rnd() * 100) + "%";
+      s.style.setProperty("--o", (0.15 + rnd() * 0.45).toFixed(2));
+      s.style.setProperty("--t", (2.5 + rnd() * 4).toFixed(2) + "s");
+      s.style.setProperty("--dl", (-rnd() * 6).toFixed(2) + "s");
+      if (rnd() > 0.86) s.className = "big";
+      frag.appendChild(s);
+    }
+    sky.appendChild(frag);
+  });
+
+  /* ---------- Emblema que sigue suavemente al cursor ---------- */
+  var emblem = document.getElementById("emblem");
+  if (emblem && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
+    var hero = emblem.closest(".hero");
+    hero.addEventListener("mousemove", function (e) {
+      var r = hero.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      emblem.style.transform = "translate(" + (x * 14).toFixed(1) + "px," + (y * 14).toFixed(1) + "px)";
+    });
+    hero.addEventListener("mouseleave", function () { emblem.style.transform = ""; });
+  }
+
+  /* ---------- Aparición al hacer scroll + escenarios que corren solo en pantalla ---------- */
+  var reveals = document.querySelectorAll(".reveal");
+  var stages = document.querySelectorAll(".stage");
+  if ("IntersectionObserver" in window) {
+    var revealObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); revealObs.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+    reveals.forEach(function (el) { revealObs.observe(el); });
+
+    var stageObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        en.target.classList.toggle("playing", en.isIntersecting);
+        en.target.querySelectorAll("svg").forEach(function (svg) {
+          if (!svg.pauseAnimations) return;
+          if (en.isIntersecting && !reduceMotion) svg.unpauseAnimations(); else svg.pauseAnimations();
+        });
+      });
+    }, { threshold: 0.15 });
+    stages.forEach(function (el) { stageObs.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add("in"); });
+    stages.forEach(function (el) { el.classList.add("playing"); });
+  }
+  if (reduceMotion) {
+    document.querySelectorAll(".stage svg").forEach(function (svg) { if (svg.pauseAnimations) svg.pauseAnimations(); });
+  }
+
+  /* ---------- Lealtad: QR que se renueva, puntos y comercios ---------- */
+  var qr = document.getElementById("qr");
+  var timer = document.querySelector(".qr-timer b");
+  if (qr && timer && !reduceMotion) {
+    var cells = Array.prototype.filter.call(qr.children, function (c) { return !c.classList.contains("fx"); });
+    var pts = document.getElementById("pts");
+    var shops = document.querySelectorAll("#merchants span");
+    var points = 1240, shop = 0;
+    timer.addEventListener("animationiteration", function () {
+      cells.forEach(function (c) { c.classList.toggle("on", Math.random() < 0.48); });
+      points += 10;
+      if (pts) pts.textContent = points.toLocaleString("es-VE");
+      if (shops.length) {
+        shops[shop].classList.remove("active");
+        shop = (shop + 1) % shops.length;
+        shops[shop].classList.add("active");
+      }
+    });
   }
 
   /* ---------- Copiar al portapapeles ---------- */
@@ -125,7 +203,7 @@
     });
   });
 
-  /* ---------- Formulario de contacto (envío mediante cliente de correo) ---------- */
+  /* ---------- Formulario de contacto (envío mediante el correo del visitante) ---------- */
   var form = document.getElementById("contact-form");
   if (form) {
     var emailOk = function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); };
@@ -139,7 +217,6 @@
         if (!ok && valid) { input.focus(); valid = false; }
       });
       if (!valid) return;
-
       var d = new FormData(form);
       var reason = form.querySelector("#f-reason option:checked").textContent.trim();
       var subject = "[" + reason + "] " + d.get("name") + (d.get("company") ? " — " + d.get("company") : "");
@@ -151,7 +228,6 @@
         "",
         d.get("message")
       ].join("\n");
-
       window.location.href = "mailto:andres@aldebaransystems.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
       var status = document.getElementById("form-status");
       if (status) status.classList.add("show");
